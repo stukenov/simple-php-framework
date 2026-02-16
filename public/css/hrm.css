@@ -1,0 +1,284 @@
+/* HRM Система - стиль Craigslist */
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #000;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+header h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+nav {
+    margin-bottom: 10px;
+}
+
+nav a {
+    color: #00c;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Статистика */
+.stats-grid {
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.stat-card h3 {
+    font-size: 12px;
+    color: #000;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+}
+
+/* Быстрые действия */
+.quick-actions {
+    margin-bottom: 20px;
+}
+
+.quick-actions h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.action-btn {
+    display: inline-block;
+    color: #00c;
+    text-decoration: none;
+    margin-right: 15px;
+    padding: 5px 0;
+}
+
+.action-btn:hover {
+    text-decoration: underline;
+}
+
+/* Соответствие нормам */
+.compliance-info {
+    background: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.compliance-info h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.compliance-info ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.compliance-info li {
+    margin-bottom: 5px;
+}
+
+/* Таблицы */
+.table-container {
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 4px 8px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    font-size: 12px;
+}
+
+th {
+    background: #f9f9f9;
+    color: #000;
+    font-weight: normal;
+    text-transform: none;
+    font-size: 12px;
+    border-bottom: 2px solid #ccc;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+.status-active {
+    color: #000;
+    font-weight: normal;
+}
+
+.status-pending {
+    color: #000;
+    font-weight: normal;
+}
+
+.status-completed {
+    color: #000;
+    font-weight: normal;
+}
+
+/* Формы */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-section {
+    background: white;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.form-section h3 {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #000;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: normal;
+    color: #000;
+    font-size: 12px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 3px 5px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: 1px solid #00c;
+    border-color: #00c;
+}
+
+.form-row {
+    display: table;
+    width: 100%;
+}
+
+.form-row .form-group {
+    display: table-cell;
+    padding-right: 10px;
+}
+
+.form-row .form-group:last-child {
+    padding-right: 0;
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.btn {
+    padding: 3px 10px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #00c;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.btn:hover {
+    background: #f9f9f9;
+}
+
+.btn-primary {
+    background: #fff;
+    color: #00c;
+}
+
+.btn-secondary {
+    background: #fff;
+    color: #000;
+}
+
+.btn-success {
+    background: #fff;
+    color: #000;
+}
+
+.btn-danger {
+    background: #fff;
+    color: #c00;
+}
+
+/* Дополнительные элементы */
+.info-grid {
+    margin-bottom: 15px;
+}
+
+.info-item {
+    margin-bottom: 10px;
+    padding: 5px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+}
+
+.info-item strong {
+    color: #000;
+}
+
+.info-item.full-width {
+    margin-bottom: 10px;
+}

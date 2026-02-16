@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo htmlspecialchars($employee->full_name); ?> - Карточка сотрудника</title>
+    <link rel="stylesheet" href="/css/hrm.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><?php echo htmlspecialchars($employee->full_name); ?></h1>
+            <nav>
+                <a href="/hrm">Главная</a>
+                <a href="/hrm/employees">Сотрудники</a>
+                <a href="/hrm/contracts">Договоры</a>
+                <a href="/hrm/leaves">Отпуска</a>
+                <a href="/hrm/payroll">Зарплата</a>
+                <a href="/hrm/time-tracking">Учет времени</a>
+                <a href="/hrm/reports">Отчеты</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="form-section">
+                <h3>Личные данные</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>ИИН:</strong> <?php echo htmlspecialchars($employee->iin); ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Дата рождения:</strong> <?php echo $employee->date_of_birth ? date('d.m.Y', strtotime($employee->date_of_birth)) : '-'; ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Пол:</strong> <?php echo htmlspecialchars($employee->gender ?: '-'); ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Гражданство:</strong> <?php echo htmlspecialchars($employee->citizenship); ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Телефон:</strong> <?php echo htmlspecialchars($employee->phone ?: '-'); ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Email:</strong> <?php echo htmlspecialchars($employee->email ?: '-'); ?>
+                    </div>
+                </div>
+
+                <div class="info-item full-width">
+                    <strong>Адрес:</strong> <?php echo htmlspecialchars($employee->address ?: '-'); ?>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Трудовые данные</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Должность:</strong> <?php echo htmlspecialchars($employee->position); ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Отдел:</strong> <?php echo htmlspecialchars($employee->department ?: '-'); ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Дата приема:</strong> <?php echo date('d.m.Y', strtotime($employee->hire_date)); ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Стаж работы:</strong> <?php echo round($employee->getWorkExperienceYears(), 1); ?> лет
+                    </div>
+                    <div class="info-item">
+                        <strong>Тип договора:</strong> <?php echo htmlspecialchars($employee->contract_type); ?>
+                    </div>
+                    <div class="info-item">
+                        <strong>Статус:</strong>
+                        <span class="status-<?php echo $employee->status === 'работает' ? 'active' : 'completed'; ?>">
+                            <?php echo htmlspecialchars($employee->status); ?>
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Базовая зарплата:</strong> <?php echo number_format($employee->salary_base, 0, ',', ' '); ?> ₸
+                    </div>
+                    <div class="info-item">
+                        <strong>График работы:</strong> <?php echo htmlspecialchars($employee->work_schedule); ?>
+                    </div>
+                </div>
+
+                <?php if ($employee->bank_account): ?>
+                <div class="info-item full-width">
+                    <strong>Банковские реквизиты:</strong><br>
+                    Счет: <?php echo htmlspecialchars($employee->bank_account); ?><br>
+                    Банк: <?php echo htmlspecialchars($employee->bank_name ?: '-'); ?>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <?php if (!empty($contracts)): ?>
+            <div class="form-section">
+                <h3>Трудовые договоры</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Номер договора</th>
+                                <th>Тип</th>
+                                <th>Дата начала</th>
+                                <th>Дата окончания</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contracts as $contract): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($contract->contract_number); ?></td>
+                                <td><?php echo htmlspecialchars($contract->contract_type); ?></td>
+                                <td><?php echo date('d.m.Y', strtotime($contract->start_date)); ?></td>
+                                <td><?php echo $contract->end_date ? date('d.m.Y', strtotime($contract->end_date)) : '-'; ?></td>
+                                <td>
+                                    <span class="status-<?php echo $contract->status === 'активный' ? 'active' : 'completed'; ?>">
+                                        <?php echo htmlspecialchars($contract->status); ?>
+                                    </span>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($recentLeaves)): ?>
+            <div class="form-section">
+                <h3>Последние отпуска</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Тип отпуска</th>
+                                <th>Дата начала</th>
+                                <th>Дата окончания</th>
+                                <th>Дни</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($recentLeaves as $leave): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($leave->leave_type); ?></td>
+                                <td><?php echo date('d.m.Y', strtotime($leave->start_date)); ?></td>
+                                <td><?php echo date('d.m.Y', strtotime($leave->end_date)); ?></td>
+                                <td><?php echo $leave->days_count; ?></td>
+                                <td>
+                                    <span class="status-<?php echo $leave->status === 'одобрен' ? 'active' : ($leave->status === 'завершен' ? 'completed' : 'pending'); ?>">
+                                        <?php echo htmlspecialchars($leave->leave_type); ?>
+                                    </span>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <div class="form-actions">
+                <a href="/hrm/employees" class="btn btn-secondary">← Назад к списку</a>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .info-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .info-item strong {
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</body>
+</html>

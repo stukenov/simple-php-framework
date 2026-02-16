@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HRM Система - Дашборд</title>
+    <link rel="stylesheet" href="/css/hrm.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Система управления персоналом</h1>
+            <nav>
+                <a href="/hrm">Главная</a>
+                <a href="/hrm/employees">Сотрудники</a>
+                <a href="/hrm/contracts">Договоры</a>
+                <a href="/hrm/leaves">Отпуска</a>
+                <a href="/hrm/payroll">Зарплата</a>
+                <a href="/hrm/time-tracking">Учет времени</a>
+                <a href="/hrm/reports">Отчеты</a>
+            </nav>
+        </header>
+
+        <main>
+            <h2>Общая статистика</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Всего сотрудников</h3>
+                    <div class="stat-number"><?php echo $stats['total_employees']; ?></div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Работающих</h3>
+                    <div class="stat-number"><?php echo $stats['active_employees']; ?></div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Заявок на отпуск</h3>
+                    <div class="stat-number"><?php echo $stats['pending_leaves']; ?></div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Зарплата за месяц</h3>
+                    <div class="stat-number"><?php echo number_format($stats['current_month_payroll']['total_gross'] ?? 0, 0, ',', ' '); ?> ₸</div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h3>Быстрые действия</h3>
+                <div class="actions-grid">
+                    <a href="/hrm/employees/create" class="action-btn">+ Новый сотрудник</a>
+                    <a href="/hrm/contracts/create" class="action-btn">+ Трудовой договор</a>
+                    <a href="/hrm/leaves/create" class="action-btn">+ Заявка на отпуск</a>
+                    <a href="/hrm/payroll" class="action-btn">📊 Расчет зарплаты</a>
+                </div>
+            </div>
+
+            <div class="compliance-info">
+                <h3>Соблюдение Трудового кодекса РК</h3>
+                <ul>
+                    <li>✅ Максимальная рабочая неделя: 40 часов</li>
+                    <li>✅ Минимальный ежегодный отпуск: 24 дня</li>
+                    <li>✅ Социальные отчисления: ОПВ 10%, ОМС 2%</li>
+                    <li>✅ Индивидуальный подоходный налог: 10%</li>
+                    <li>✅ Социальный налог работодателя: 9.5%</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

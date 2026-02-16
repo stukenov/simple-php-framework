@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Расчет заработной платы</title>
+    <link rel="stylesheet" href="/css/hrm.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Расчет заработной платы</h1>
+            <nav>
+                <a href="/hrm">Главная</a>
+                <a href="/hrm/employees">Сотрудники</a>
+                <a href="/hrm/contracts">Договоры</a>
+                <a href="/hrm/leaves">Отпуска</a>
+                <a href="/hrm/payroll">Зарплата</a>
+                <a href="/hrm/time-tracking">Учет времени</a>
+                <a href="/hrm/reports">Отчеты</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2>Расчет за <?php echo date('m.Y', strtotime("$year-$month-01")); ?></h2>
+                <form method="get" style="display: flex; gap: 10px;">
+                    <select name="month">
+                        <?php for ($m = 1; $m <= 12; $m++): ?>
+                            <option value="<?php echo str_pad($m, 2, '0', STR_PAD_LEFT); ?>" <?php echo $month == $m ? 'selected' : ''; ?>>
+                                <?php echo date('F', mktime(0, 0, 0, $m, 1)); ?>
+                            </option>
+                        <?php endfor; ?>
+                    </select>
+                    <select name="year">
+                        <?php for ($y = date('Y') - 1; $y <= date('Y') + 1; $y++): ?>
+                            <option value="<?php echo $y; ?>" <?php echo $year == $y ? 'selected' : ''; ?>><?php echo $y; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Показать</button>
+                </form>
+            </div>
+
+            <div class="compliance-info" style="margin-bottom: 30px;">
+                <h3>💰 Налоги и отчисления согласно законодательству РК</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                    <div>
+                        <strong>ИПН (работник):</strong> 10%<br>
+                        <strong>ОПВ (работник):</strong> 10%<br>
+                        <strong>ОМС (работник):</strong> 2%
+                    </div>
+                    <div>
+                        <strong>Социальный налог (работодатель):</strong> 9.5%<br>
+                        <strong>Максимальная ставка:</strong> 7 МЗП
+                    </div>
+                    <div>
+                        <strong>Минимальная зарплата:</strong> 70,000 ₸<br>
+                        <strong>МЗП для расчетов:</strong> 70,000 ₸
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Сотрудник</th>
+                            <th>Должность</th>
+                            <th>Базовая зарплата</th>
+                            <th>Переработка (ч)</th>
+                            <th>Премии</th>
+                            <th>Валовая зарплата</th>
+                            <th>ИПН 10%</th>
+                            <th>ОПВ 10%</th>
+                            <th>ОМС 2%</th>
+                            <th>К выдаче</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($payrolls as $payroll): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($payroll->getEmployee()->full_name ?? 'Не найден'); ?></td>
+                            <td><?php echo htmlspecialchars($payroll->getEmployee()->position ?? '-'); ?></td>
+                            <td><?php echo number_format($payroll->base_salary, 0, ',', ' '); ?> ₸</td>
+                            <td><?php echo $payroll->overtime_hours ?? 0; ?></td>
+                            <td><?php echo number_format($payroll->bonuses ?? 0, 0, ',', ' '); ?> ₸</td>
+                            <td><?php echo number_format($payroll->gross_salary, 0, ',', ' '); ?> ₸</td>
+                            <td><?php echo number_format($payroll->income_tax, 0, ',', ' '); ?> ₸</td>
+                            <td><?php echo number_format($payroll->social_contribution, 0, ',', ' '); ?> ₸</td>
+                            <td><?php echo number_format($payroll->medical_contribution, 0, ',', ' '); ?> ₸</td>
+                            <td><strong><?php echo number_format($payroll->net_salary, 0, ',', ' '); ?> ₸</strong></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr style="background: #f8f9fa; font-weight: bold;">
+                            <td colspan="5">ИТОГО:</td>
+                            <td><?php echo number_format($total['total_gross'] ?? 0, 0, ',', ' '); ?> ₸</td>
+                            <td><?php echo number_format(array_sum(array_column($payrolls, 'income_tax')), 0, ',', ' '); ?> ₸</td>
+                            <td><?php echo number_format(array_sum(array_column($payrolls, 'social_contribution')), 0, ',', ' '); ?> ₸</td>
+                            <td><?php echo number_format(array_sum(array_column($payrolls, 'medical_contribution')), 0, ',', ' '); ?> ₸</td>
+                            <td><?php echo number_format($total['total_net'] ?? 0, 0, ',', ' '); ?> ₸</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="stats-grid" style="margin-top: 30px;">
+                <div class="stat-card">
+                    <h3>Общий фонд оплаты труда</h3>
+                    <div class="stat-number"><?php echo number_format(($total['total_gross'] ?? 0) + array_sum(array_column($payrolls, 'social_tax')), 0, ',', ' '); ?> ₸</div>
+                    <small>Включая соц. налог работодателя</small>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Общая сумма налогов</h3>
+                    <div class="stat-number"><?php echo number_format(array_sum(array_column($payrolls, 'income_tax')) + array_sum(array_column($payrolls, 'social_contribution')) + array_sum(array_column($payrolls, 'medical_contribution')), 0, ',', ' '); ?> ₸</div>
+                    <small>ИПН + ОПВ + ОМС</small>
+                </div>
+
+                <div class="stat-card">
+                    <h3>К выплате сотрудникам</h3>
+                    <div class="stat-number"><?php echo number_format($total['total_net'] ?? 0, 0, ',', ' '); ?> ₸</div>
+                    <small>Чистая зарплата</small>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

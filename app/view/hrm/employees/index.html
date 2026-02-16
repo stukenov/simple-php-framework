@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Управление сотрудниками</title>
+    <link rel="stylesheet" href="/css/hrm.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Управление сотрудниками</h1>
+            <nav>
+                <a href="/hrm">Главная</a>
+                <a href="/hrm/employees">Сотрудники</a>
+                <a href="/hrm/contracts">Договоры</a>
+                <a href="/hrm/leaves">Отпуска</a>
+                <a href="/hrm/payroll">Зарплата</a>
+                <a href="/hrm/time-tracking">Учет времени</a>
+                <a href="/hrm/reports">Отчеты</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2>Список сотрудников</h2>
+                <a href="/hrm/employees/create" class="btn btn-primary">+ Добавить сотрудника</a>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ИИН</th>
+                            <th>ФИО</th>
+                            <th>Должность</th>
+                            <th>Отдел</th>
+                            <th>Дата приема</th>
+                            <th>Статус</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($employees as $employee): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($employee->iin); ?></td>
+                            <td><?php echo htmlspecialchars($employee->full_name); ?></td>
+                            <td><?php echo htmlspecialchars($employee->position); ?></td>
+                            <td><?php echo htmlspecialchars($employee->department); ?></td>
+                            <td><?php echo date('d.m.Y', strtotime($employee->hire_date)); ?></td>
+                            <td>
+                                <span class="status-<?php echo $employee->status === 'работает' ? 'active' : 'completed'; ?>">
+                                    <?php echo htmlspecialchars($employee->status); ?>
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/hrm/employees/<?php echo $employee->id; ?>" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">Просмотр</a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <?php if (empty($employees)): ?>
+            <div style="text-align: center; padding: 50px; color: #666;">
+                <p>Сотрудники не найдены. <a href="/hrm/employees/create">Добавить первого сотрудника</a></p>
+            </div>
+            <?php endif; ?>
+        </main>
+    </div>
+</body>
+</html>

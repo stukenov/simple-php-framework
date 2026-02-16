@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Добавление сотрудника</title>
+    <link rel="stylesheet" href="/css/hrm.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Добавление сотрудника</h1>
+            <nav>
+                <a href="/hrm">Главная</a>
+                <a href="/hrm/employees">Сотрудники</a>
+                <a href="/hrm/contracts">Договоры</a>
+                <a href="/hrm/leaves">Отпуска</a>
+                <a href="/hrm/payroll">Зарплата</a>
+                <a href="/hrm/time-tracking">Учет времени</a>
+                <a href="/hrm/reports">Отчеты</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <form action="/hrm/employees" method="post" class="form-section">
+                    <h3>Личные данные</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="iin">ИИН *</label>
+                            <input type="text" id="iin" name="iin" required maxlength="12" pattern="[0-9]{12}" title="ИИН должен содержать 12 цифр">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="full_name">ФИО *</label>
+                            <input type="text" id="full_name" name="full_name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date_of_birth">Дата рождения</label>
+                            <input type="date" id="date_of_birth" name="date_of_birth">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">Пол</label>
+                            <select id="gender" name="gender">
+                                <option value="">Выберите</option>
+                                <option value="мужской">Мужской</option>
+                                <option value="женский">Женский</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="citizenship">Гражданство</label>
+                            <select id="citizenship" name="citizenship">
+                                <option value="Казахстан">Казахстан</option>
+                                <option value="Россия">Россия</option>
+                                <option value="Другое">Другое</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Телефон</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Адрес проживания</label>
+                        <textarea id="address" name="address" rows="2"></textarea>
+                    </div>
+
+                    <h3>Трудовые данные</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="position">Должность *</label>
+                            <input type="text" id="position" name="position" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department">Отдел</label>
+                            <input type="text" id="department" name="department">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="hire_date">Дата приема на работу *</label>
+                            <input type="date" id="hire_date" name="hire_date" required value="<?php echo date('Y-m-d'); ?>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contract_type">Тип договора</label>
+                            <select id="contract_type" name="contract_type">
+                                <option value="бессрочный">Бессрочный</option>
+                                <option value="срочный">Срочный</option>
+                                <option value="ГПХ">Договор ГПХ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="salary_base">Базовая зарплата (₸) *</label>
+                            <input type="number" id="salary_base" name="salary_base" required min="0" step="1000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="salary_type">Тип оплаты</label>
+                            <select id="salary_type" name="salary_type">
+                                <option value="месячная">Месячная</option>
+                                <option value="почасовая">Почасовая</option>
+                                <option value="сдельная">Сдельная</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="work_schedule">График работы</label>
+                            <select id="work_schedule" name="work_schedule">
+                                <option value="5/2">5/2 (40 часов)</option>
+                                <option value="6/1">6/1 (40 часов)</option>
+                                <option value="сменный">Сменный график</option>
+                                <option value="гибкий">Гибкий график</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bank_account">Расчетный счет</label>
+                            <input type="text" id="bank_account" name="bank_account">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bank_name">Название банка</label>
+                        <input type="text" id="bank_name" name="bank_name">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Сохранить сотрудника</button>
+                        <a href="/hrm/employees" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Валидация ИИН
+        document.getElementById('iin').addEventListener('input', function(e) {
+            const iin = e.target.value;
+            if (iin.length === 12 && !/^\d{12}$/.test(iin)) {
+                e.target.setCustomValidity('ИИН должен содержать только цифры');
+            } else if (iin.length > 12) {
+                e.target.value = iin.slice(0, 12);
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+    </script>
+</body>
+</html>

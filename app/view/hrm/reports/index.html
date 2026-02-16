@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Отчеты для налоговых органов</title>
+    <link rel="stylesheet" href="/css/hrm.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Отчеты для налоговых органов</h1>
+            <nav>
+                <a href="/hrm">Главная</a>
+                <a href="/hrm/employees">Сотрудники</a>
+                <a href="/hrm/contracts">Договоры</a>
+                <a href="/hrm/leaves">Отпуска</a>
+                <a href="/hrm/payroll">Зарплата</a>
+                <a href="/hrm/time-tracking">Учет времени</a>
+                <a href="/hrm/reports">Отчеты</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2>Отчет за <?php echo date('m.Y', strtotime("$year-$month-01")); ?></h2>
+                <form method="get" style="display: flex; gap: 10px;">
+                    <select name="month">
+                        <?php for ($m = 1; $m <= 12; $m++): ?>
+                            <option value="<?php echo str_pad($m, 2, '0', STR_PAD_LEFT); ?>" <?php echo $month == $m ? 'selected' : ''; ?>>
+                                <?php echo date('F', mktime(0, 0, 0, $m, 1)); ?>
+                            </option>
+                        <?php endfor; ?>
+                    </select>
+                    <select name="year">
+                        <?php for ($y = date('Y') - 1; $y <= date('Y') + 1; $y++): ?>
+                            <option value="<?php echo $y; ?>" <?php echo $year == $y ? 'selected' : ''; ?>><?php echo $y; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Показать</button>
+                </form>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Общая численность</h3>
+                    <div class="stat-number"><?php echo $totalEmployees; ?></div>
+                    <small>Работающих сотрудников</small>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Фонд оплаты труда</h3>
+                    <div class="stat-number"><?php echo number_format($totalPayroll['total_gross'] ?? 0, 0, ',', ' '); ?> ₸</div>
+                    <small>Валовая зарплата</small>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Налоговые отчисления</h3>
+                    <div class="stat-number"><?php echo number_format(($totalPayroll['total_tax'] ?? 0) + ($totalPayroll['total_social_tax'] ?? 0), 0, ',', ' '); ?> ₸</div>
+                    <small>ИПН + Соц. налог</small>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Средняя зарплата</h3>
+                    <div class="stat-number">
+                        <?php
+                        $avgSalary = $totalEmployees > 0 ? ($totalPayroll['total_gross'] ?? 0) / $totalEmployees : 0;
+                        echo number_format($avgSalary, 0, ',', ' ');
+                        ?> ₸
+                    </div>
+                    <small>На сотрудника</small>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>📊 Форма 910.00 - Отчет по индивидуальному подоходному налогу</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Общая сумма доходов:</strong><br>
+                        <?php echo number_format($totalPayroll['total_gross'] ?? 0, 0, ',', ' '); ?> ₸
+                    </div>
+                    <div class="info-item">
+                        <strong>Сумма ИПН к уплате:</strong><br>
+                        <?php echo number_format($totalPayroll['total_tax'] ?? 0, 0, ',', ' '); ?> ₸
+                    </div>
+                    <div class="info-item">
+                        <strong>Количество плательщиков:</strong><br>
+                        <?php echo $totalEmployees; ?> человек
+                    </div>
+                    <div class="info-item">
+                        <strong>Период отчетности:</strong><br>
+                        <?php echo date('01.m.Y', strtotime("$year-$month-01")); ?> - <?php echo date('t.m.Y', strtotime("$year-$month-01")); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>📈 Форма 700.00 - Отчет по социальному налогу</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Объект налогообложения:</strong><br>
+                        <?php echo number_format($totalPayroll['total_gross'] ?? 0, 0, ',', ' '); ?> ₸
+                    </div>
+                    <div class="info-item">
+                        <strong>Ставка социального налога:</strong><br>
+                        9.5%
+                    </div>
+                    <div class="info-item">
+                        <strong>Сумма социального налога:</strong><br>
+                        <?php echo number_format($totalPayroll['total_social_tax'] ?? 0, 0, ',', ' '); ?> ₸
+                    </div>
+                    <div class="info-item">
+                        <strong>Количество работников:</strong><br>
+                        <?php echo $totalEmployees; ?> человек
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>🏢 Форма 200.00 - Отчет по обязательным пенсионным взносам</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Общая сумма взносов:</strong><br>
+                        <?php echo number_format(array_sum(array_column($payrolls ?? [], 'social_contribution')), 0, ',', ' '); ?> ₸
+                    </div>
+                    <div class="info-item">
+                        <strong>Ставка ОПВ:</strong><br>
+                        10% (работник)
+                    </div>
+                    <div class="info-item">
+                        <strong>Количество плательщиков:</strong><br>
+                        <?php echo $totalEmployees; ?> человек
+                    </div>
+                    <div class="info-item">
+                        <strong>Максимальная сумма ОПВ:</strong><br>
+                        5,888,000 ₸ (75 МЗП)
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>⚕️ Форма 300.00 - Отчет по взносам на обязательное медицинское страхование</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Общая сумма взносов:</strong><br>
+                        <?php echo number_format(array_sum(array_column($payrolls ?? [], 'medical_contribution')), 0, ',', ' '); ?> ₸
+                    </div>
+                    <div class="info-item">
+                        <strong>Ставка ОМС:</strong><br>
+                        2% (работник)
+                    </div>
+                    <div class="info-item">
+                        <strong>Количество плательщиков:</strong><br>
+                        <?php echo $totalEmployees; ?> человек
+                    </div>
+                    <div class="info-item">
+                        <strong>Максимальная сумма ОМС:</strong><br>
+                        1,400,000 ₸ (20 МЗП)
+                    </div>
+                </div>
+            </div>
+
+            <div class="compliance-info">
+                <h3>📋 Соответствие налоговому законодательству РК</h3>
+                <ul>
+                    <li>✅ <strong>Налоговый кодекс РК:</strong> Корректное исчисление ИПН (10%)</li>
+                    <li>✅ <strong>Закон о пенсионном обеспечении:</strong> ОПВ в размере 10%</li>
+                    <li>✅ <strong>Закон об обязательном медицинском страховании:</strong> ОМС 2%</li>
+                    <li>✅ <strong>Закон о социальном налоге:</strong> Социальный налог работодателя 9.5%</li>
+                    <li>✅ <strong>Сроки сдачи отчетности:</strong> Ежемесячно, не позднее 15 числа</li>
+                </ul>
+            </div>
+
+            <div class="form-actions">
+                <button onclick="window.print()" class="btn btn-primary">🖨️ Распечатать отчет</button>
+                <a href="/hrm" class="btn btn-secondary">← Назад в HRM</a>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        @media print {
+            header nav, .form-actions { display: none; }
+            .container { max-width: none; padding: 20px; }
+        }
+    </style>
+</body>
+</html>
